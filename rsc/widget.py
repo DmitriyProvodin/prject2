@@ -1,5 +1,5 @@
 from rsc import masks
-gsaaaaaaaaaaaa
+
 
 def mask_account_card(nums: str) -> str:
     if 'Счёт' in nums:

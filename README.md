@@ -31,4 +31,4 @@ pip install -r requirements.txt
 provodin@bk.ru
 
 #### Источники
-- Программа создана при поддержке онлайн-школы skypro@skyeng.ru
+- Программа создана при поддержке онлайн-школы skypro@skyeng.ru (рекомендую)

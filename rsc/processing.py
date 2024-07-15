@@ -30,4 +30,3 @@ def sort_by_date(
         reverse=reverse,
     )
     return sorted_list
-.

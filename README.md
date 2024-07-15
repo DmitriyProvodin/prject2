@@ -16,7 +16,7 @@
 ## Инструкция по установке
 - Чтобы скачать репозиторий:
 
-git clone https://github.com/rostislavegorenkov/Project1.git
+git clone https://github.com/DmitriyProvodin/project1
 
 - Затем вам необходимо установить основные зависимости для запуска проекта в вашей системе:
 

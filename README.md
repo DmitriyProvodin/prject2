@@ -29,6 +29,6 @@ pip install -r requirements.txt
 
 - Контакт для связи с разработком:
 provodin@bk.ru
-
+.
 #### Источники
 - Программа создана при поддержке онлайн-школы skypro@skyeng.ru (рекомендую)

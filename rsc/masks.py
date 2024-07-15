@@ -20,3 +20,4 @@ def get_mask_account(nums):
 
 def get_mask_card_number(param):
     return None
+.

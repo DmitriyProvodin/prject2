@@ -1,6 +1,6 @@
 from pip._internal.cli.cmdoptions import src
 
-from rsc import processing
+from src import processing
 
 
 def test_filter_by_state(test_initial_list):

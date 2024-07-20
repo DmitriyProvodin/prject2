@@ -1,48 +1,53 @@
 import pytest
-from src.widget import mask_account_card, get_date
+
+from src.widget import get_data, mask_account_card
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [
-        ("Счет 8432014830921482302394", "Счет **2394"),
-        ("Visa Platinum 2131231284932299", "Visa Platinum 213123******2299"),
-    ],
-)
-def test_mask_account_card(user_input, expected):
-    assert mask_account_card(user_input) == expected
+@pytest.mark.parametrize('user_information, expected_result', [
+    ('Maestro 1596 8378 6870 5199', 'Maestro 1596 83** **** 5199'),
+    ('Счет 64686473678894779589', 'Счет **9589'),
+    ('MasterCard 7158300734726758', 'MasterCard 7158 30** **** 6758'),
+    ('Счет 35383033474447895560', 'Счет **5560'),
+    ('Visa Classic 6831 9824 7673 7658', 'Visa Classic 6831 98** **** 7658'),
+    ('Visa Classic 1234123412341234', 'Visa Classic 1234 12** **** 1234')
+])
+def test_mask_account_card(user_information, expected_result):
+    assert mask_account_card(user_information) == expected_result
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [
-        ("Maestro 7000792289606361", "Maestro 700079******6361"),
-        ("Visa 7000792289606361", "Visa 700079******6361"),
-        ("Mir 7289094321672902", "Mir 728909******2902"),
-        ("Счет 8432014830921482304", "Счет **2304"),
-    ],
-)
-def uni_mask_account_card(user_input, expected):
-    assert mask_account_card(user_input) == expected
+@pytest.mark.parametrize('faults', [
+    '',
+    'Счет',
+    '12341234123412341234',
+    '1',
+    '1234 1234 1234 1234',
+    'Maestro **12351',
+])
+def test_mask_account_faults(faults):
+    with pytest.raises(ValueError) as exc_info:
+        mask_account_card(faults)
+
+    assert str(exc_info.value) == "Введены некорректные данные!"
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [
-        ("2.02", "Введите номер карты или счет"),
-        ("Счет 1", "Введите номер карты или счет"),
-        ("", "Введите номер карты или счет"),
-    ],
-)
-def empty_mask_account_card(user_input, expected):
-    assert mask_account_card(user_input) == expected
+def test_get_data():
+    assert get_data('2023-11-14T02:26:18.671407') == '14.11.2023'
+    assert get_data('2024-07-17iruaghpairueghiuh') == '17.07.2024'
+    assert get_data('2024-07-17i') == '17.07.2024'
 
 
-@pytest.fixture
-def right_get_date():
-    assert get_date("2024-03-11T02:26:18.671407") == "11.03.2024"
+def test_get_data_errors():
+    with pytest.raises(ValueError) as exc_info:
+        get_data('')
 
+    assert str(exc_info.value) == 'Введён неправильный формат даты'
 
-@pytest.fixture
-def test_get_date():
-    assert get_date("") == "Нет данных о дате"
+    with pytest.raises(ValueError) as exc_info:
+        get_data('2024-')
+
+    assert str(exc_info.value) == 'Введён неправильный формат даты'
+
+    with pytest.raises(ValueError) as exc_info:
+        get_data('20ii-123-1234eiirhuf')
+
+    assert str(exc_info.value) == 'Введён неправильный формат даты'

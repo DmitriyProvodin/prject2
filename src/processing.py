@@ -1,9 +1,16 @@
-def filter_by_state(date_list: list, state: str = "EXECUTED") -> list:
-    """Функция для фильтрации словарей в списке по заданному ключу"""
-    filtered_list = [i for i in date_list if i["state"] == state]
-    return filtered_list
+from datetime import datetime
 
 
-def sort_by_date(date_list: list, vector: bool = True) -> list:
-    """Функция сортировки списка словарей по дате"""
-    return sorted(date_list, key=lambda i: i["date"], reverse=vector)
+def filter_by_state(operations: list, state: str = "EXECUTED") -> list:
+    """Создаем функцию filter_by_state, которая принимает на вход список словарей и параметр state(по умолчанию "EXECUTED").
+    Функция возвращает новый список словарей, соответствующих параметру state"""
+    return [item for item in operations if item.get("state") == state]
+
+
+def sort_by_date(operations: list, reverse: bool = True) -> list:
+    """Создаем функцию sort_by_date, которая принимает на вход список словарей и параметр reverse(по умол. "True").
+    Функция возвращает новый список словарей, сортированных по дате операций, согласно параметру reverse"""
+    try:
+        return sorted(operations, key=lambda x: datetime.strptime(x["date"], "%Y-%m-%dT%H:%M:%S.%f"), reverse=reverse)
+    except:
+        raise ValueError("Есть неккоректная дата(-ы)")

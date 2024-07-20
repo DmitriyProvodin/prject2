@@ -1,48 +1,49 @@
 import pytest
-from src.masks import get_mask_card_number, get_mask_account
+
+from src.masks import get_mask_account, get_mask_card_number
 
 
-@pytest.fixture
-def right_get_mask_card_number():
-    assert get_mask_card_number("7000792289606361") == "7000 79** **** 6361"
+def test_get_mask_card_number():
+    assert get_mask_card_number('1234123412341234') == '1234 12** **** 1234'
+    assert get_mask_card_number('1596 8378 6870 5199') == '1596 83** **** 5199'
+
+def test_get_mask_card_number_letter():
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_card_number('abcdabcdabcdabcd')
+
+    assert str(exc_info.value) == "Длина номера карты только 16 ЦИФР"
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [
-        ("401288881888", "4012 88** 1888"),
-        ("4012888818888", "4012 88** *888 8"),
-        ("37598765432100", "3759 87**** 2100"),
-        ("375987654321001", "3759 87**** *1001"),
-        ("70007922896063610", "7000 79** **** *361 0"),
-        ("700079228960636101", "7000 79** **** **61 01"),
-        ("7000792289606361012", "7000 79** *******1 012"),
-    ],
-)
-def len_get_mask_card_number(user_input, expected):
-    assert get_mask_card_number(user_input) == expected
+def test_get_mask_card_number_length():
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_card_number('12341234123412341234')
+
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_card_number('1234 1234 1234 1234 1234')
+
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_card_number('1234 1234 1234 ')
+
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_card_number('')
+
+    assert str(exc_info.value) == "Длина номера карты только 16 ЦИФР"
 
 
-@pytest.fixture
-def empty_get_mask_card_number():
-    assert get_mask_card_number("") == "Вы ничего не указали, введите номер карты"
+def test_get_mask_account():
+    assert get_mask_account('12341234123412341234') == '**1234'
+    assert get_mask_account('8617234528346758237465283476') == '**3476'
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [("73654108430135874305", "** 4305"), ("73654108430135854893", "** 4893")],
-)
-def right_get_mask_account(user_input, expected):
-    assert get_mask_account(user_input) == expected
+def test_get_mask_account_short_length():
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_account('1234123412341234')
+
+    assert str(exc_info.value) == "Длина счета минимум 20 ЦИФР"
 
 
-@pytest.mark.parametrize(
-    "user_input, expected",
-    [
-        ("73654108430135854893", "** 4893"),
-        ("736541084301358548931231231", "** 1231"),
-        ("123123213023002", "** 3002"),
-    ],
-)
-def len_get_mask_account(user_input, expected):
-    assert get_mask_account(user_input) == expected
+def test_get_mask_account_letters():
+    with pytest.raises(ValueError) as exc_info:
+        get_mask_account('abcdabcdabcdabcdabcd')
+
+    assert str(exc_info.value) == "Длина счета минимум 20 ЦИФР"
